@@ -1,0 +1,5 @@
+.build/
+.swiftpm/
+Spellsheet.app
+*.xcuserstate
+.DS_Store
