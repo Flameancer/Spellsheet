@@ -226,7 +226,7 @@ struct ScoreField: NSViewRepresentable {
         field.drawsBackground = false
         field.alignment = .center
         field.font = .systemFont(ofSize: 18, weight: .semibold)
-        field.textColor = NSColor(srgbRed: 0.96, green: 0.91, blue: 0.82, alpha: 1)
+        field.textColor = Theme.active.creamNSColor
         field.focusRingType = .none
         field.delegate = context.coordinator
         field.stringValue = "\(score)"
@@ -237,6 +237,8 @@ struct ScoreField: NSViewRepresentable {
     func updateNSView(_ field: NSTextField, context: Context) {
         context.coordinator.onCommit = onCommit
         context.coordinator.score = score
+        _ = AppStore.shared.colorTheme
+        field.textColor = Theme.active.creamNSColor
         let editing = field.currentEditor() != nil
         if !editing, field.stringValue != "\(score)" {
             field.stringValue = "\(score)"
