@@ -666,6 +666,86 @@ struct AddClassSheet: View {
     }
 }
 
+struct AppearanceSettings: View {
+    var model: AppModel
+
+    private let columns = [
+        GridItem(.adaptive(minimum: 200, maximum: 260), spacing: 14),
+    ]
+
+    var body: some View {
+        MacScroll {
+            VStack(alignment: .leading, spacing: 16) {
+                Text("Color palette")
+                    .font(Theme.serif(22))
+                    .foregroundStyle(Theme.cream)
+                Text("Themes restyle the whole sheet. Your choice is remembered on this Mac.")
+                    .font(.callout)
+                    .foregroundStyle(Theme.muted)
+                    .fixedSize(horizontal: false, vertical: true)
+                LazyVGrid(columns: columns, alignment: .leading, spacing: 14) {
+                    ForEach(AppThemeID.allCases) { theme in
+                        ThemeSwatch(
+                            theme: theme,
+                            selected: model.colorTheme == theme
+                        ) {
+                            model.colorTheme = theme
+                        }
+                    }
+                }
+            }
+            .padding(20)
+            .frame(maxWidth: .infinity, alignment: .leading)
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+    }
+}
+
+struct ThemeSwatch: View {
+    var theme: AppThemeID
+    var selected: Bool
+    var action: () -> Void
+
+    private var palette: ColorPalette { theme.palette }
+
+    var body: some View {
+        Button(action: action) {
+            VStack(alignment: .leading, spacing: 10) {
+                HStack(spacing: 6) {
+                    swatchChip(palette.ink)
+                    swatchChip(palette.panel)
+                    swatchChip(palette.gold)
+                    swatchChip(palette.ember)
+                    swatchChip(palette.cream)
+                }
+                Text(theme.title)
+                    .font(.headline)
+                    .foregroundStyle(palette.cream)
+                Text(theme.blurb)
+                    .font(.caption)
+                    .foregroundStyle(palette.muted)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+            .padding(12)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .background(palette.card, in: RoundedRectangle(cornerRadius: 12, style: .continuous))
+            .overlay(
+                RoundedRectangle(cornerRadius: 12, style: .continuous)
+                    .stroke(selected ? palette.gold : palette.line.opacity(0.7), lineWidth: selected ? 2 : 1)
+            )
+        }
+        .buttonStyle(.plain)
+        .accessibilityLabel("\(theme.title) theme")
+        .accessibilityAddTraits(selected ? .isSelected : [])
+    }
+
+    private func swatchChip(_ color: Color) -> some View {
+        RoundedRectangle(cornerRadius: 4, style: .continuous)
+            .fill(color)
+            .frame(height: 28)
+    }
+}
+
 struct SettingsSheet: View {
     var model: AppModel
 
@@ -679,16 +759,19 @@ struct SettingsSheet: View {
                     .foregroundStyle(Theme.cream)
                 Spacer()
                 Picker("Section", selection: modelBinding(model, \.settingsTab)) {
+                    Text("Appearance").tag(SettingsTab.appearance)
                     Text("5e.tools homebrew").tag(SettingsTab.repository)
                     Text("My spells").tag(SettingsTab.spells)
                 }
                 .pickerStyle(.segmented)
-                .frame(width: 340)
+                .frame(width: 420)
                 Button("Close") { model.showingSettings = false }
             }
             .padding(16)
             Divider().overlay(Theme.line)
             switch model.settingsTab {
+            case .appearance:
+                AppearanceSettings(model: model)
             case .repository:
                 BrewChooser(model: model)
             case .spells:

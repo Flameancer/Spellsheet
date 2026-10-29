@@ -3,6 +3,7 @@ import Observation
 import SpellsheetCore
 
 enum SettingsTab: String, CaseIterable, Identifiable {
+    case appearance
     case repository
     case spells
 
@@ -34,6 +35,9 @@ final class AppModel {
     var classEdition = "All"
     var showingSettings = false
     var settingsTab: SettingsTab = .repository
+    var colorTheme: AppThemeID = AppModel.loadColorTheme() {
+        didSet { AppModel.saveColorTheme(colorTheme) }
+    }
     var homebrew: [HomebrewSpell] = []
     var homebrewDraft: HomebrewSpell?
     var settingsClassQuery = ""
@@ -47,6 +51,7 @@ final class AppModel {
     private var brewCatalogTask: Task<Void, Never>?
 
     private var didBoot = false
+    private static let colorThemeKey = "colorTheme"
     private let encoder: JSONEncoder = {
         let encoder = JSONEncoder()
         encoder.outputFormatting = [.prettyPrinted, .sortedKeys]
@@ -461,6 +466,19 @@ final class AppModel {
             .appendingPathComponent("Spellsheet", isDirectory: true)
         try? FileManager.default.createDirectory(at: url, withIntermediateDirectories: true)
         return url
+    }
+
+    private static func loadColorTheme() -> AppThemeID {
+        guard let raw = UserDefaults.standard.string(forKey: colorThemeKey),
+              let theme = AppThemeID(rawValue: raw)
+        else {
+            return .parchment
+        }
+        return theme
+    }
+
+    private static func saveColorTheme(_ theme: AppThemeID) {
+        UserDefaults.standard.set(theme.rawValue, forKey: colorThemeKey)
     }
 
     private func loadBrews() {

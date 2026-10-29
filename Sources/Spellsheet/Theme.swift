@@ -9,16 +9,153 @@ func modelBinding<T>(_ model: AppModel, _ keyPath: ReferenceWritableKeyPath<AppM
     )
 }
 
+struct ColorPalette: Equatable {
+    var ink: Color
+    var panel: Color
+    var card: Color
+    var line: Color
+    var cream: Color
+    var muted: Color
+    var gold: Color
+    var ember: Color
+    var moss: Color
+    var prefersDark: Bool
+
+    var creamNSColor: NSColor {
+        NSColor(cream)
+    }
+}
+
+enum AppThemeID: String, CaseIterable, Identifiable, Codable {
+    case parchment
+    case midnight
+    case grove
+    case emberhall
+    case storm
+    case ivory
+
+    var id: String { rawValue }
+
+    var title: String {
+        switch self {
+        case .parchment: "Parchment"
+        case .midnight: "Midnight"
+        case .grove: "Grove"
+        case .emberhall: "Emberhall"
+        case .storm: "Storm"
+        case .ivory: "Ivory"
+        }
+    }
+
+    var blurb: String {
+        switch self {
+        case .parchment: "Warm candlelit browns and gold"
+        case .midnight: "Deep night blues and silver"
+        case .grove: "Forest greens and soft gold"
+        case .emberhall: "Charcoal halls and hot coals"
+        case .storm: "Cool slate with lightning cyan"
+        case .ivory: "Light parchment desk"
+        }
+    }
+
+    var palette: ColorPalette {
+        switch self {
+        case .parchment:
+            ColorPalette(
+                ink: Color(red: 0.09, green: 0.07, blue: 0.06),
+                panel: Color(red: 0.14, green: 0.11, blue: 0.09),
+                card: Color(red: 0.20, green: 0.15, blue: 0.12),
+                line: Color(red: 0.39, green: 0.30, blue: 0.22),
+                cream: Color(red: 0.96, green: 0.91, blue: 0.82),
+                muted: Color(red: 0.72, green: 0.63, blue: 0.51),
+                gold: Color(red: 0.82, green: 0.64, blue: 0.35),
+                ember: Color(red: 0.76, green: 0.36, blue: 0.26),
+                moss: Color(red: 0.49, green: 0.66, blue: 0.45),
+                prefersDark: true
+            )
+        case .midnight:
+            ColorPalette(
+                ink: Color(red: 0.05, green: 0.07, blue: 0.12),
+                panel: Color(red: 0.09, green: 0.12, blue: 0.20),
+                card: Color(red: 0.13, green: 0.17, blue: 0.28),
+                line: Color(red: 0.28, green: 0.36, blue: 0.52),
+                cream: Color(red: 0.88, green: 0.91, blue: 0.97),
+                muted: Color(red: 0.58, green: 0.65, blue: 0.78),
+                gold: Color(red: 0.72, green: 0.80, blue: 0.94),
+                ember: Color(red: 0.86, green: 0.42, blue: 0.48),
+                moss: Color(red: 0.42, green: 0.72, blue: 0.68),
+                prefersDark: true
+            )
+        case .grove:
+            ColorPalette(
+                ink: Color(red: 0.06, green: 0.09, blue: 0.06),
+                panel: Color(red: 0.10, green: 0.15, blue: 0.10),
+                card: Color(red: 0.15, green: 0.22, blue: 0.15),
+                line: Color(red: 0.30, green: 0.42, blue: 0.30),
+                cream: Color(red: 0.90, green: 0.93, blue: 0.84),
+                muted: Color(red: 0.62, green: 0.72, blue: 0.58),
+                gold: Color(red: 0.82, green: 0.70, blue: 0.38),
+                ember: Color(red: 0.78, green: 0.42, blue: 0.28),
+                moss: Color(red: 0.48, green: 0.72, blue: 0.46),
+                prefersDark: true
+            )
+        case .emberhall:
+            ColorPalette(
+                ink: Color(red: 0.07, green: 0.06, blue: 0.06),
+                panel: Color(red: 0.12, green: 0.10, blue: 0.09),
+                card: Color(red: 0.18, green: 0.14, blue: 0.12),
+                line: Color(red: 0.42, green: 0.28, blue: 0.22),
+                cream: Color(red: 0.94, green: 0.88, blue: 0.82),
+                muted: Color(red: 0.70, green: 0.58, blue: 0.52),
+                gold: Color(red: 0.92, green: 0.58, blue: 0.28),
+                ember: Color(red: 0.88, green: 0.32, blue: 0.22),
+                moss: Color(red: 0.55, green: 0.62, blue: 0.40),
+                prefersDark: true
+            )
+        case .storm:
+            ColorPalette(
+                ink: Color(red: 0.07, green: 0.08, blue: 0.10),
+                panel: Color(red: 0.11, green: 0.13, blue: 0.16),
+                card: Color(red: 0.16, green: 0.19, blue: 0.23),
+                line: Color(red: 0.34, green: 0.40, blue: 0.46),
+                cream: Color(red: 0.90, green: 0.93, blue: 0.95),
+                muted: Color(red: 0.62, green: 0.68, blue: 0.74),
+                gold: Color(red: 0.45, green: 0.78, blue: 0.86),
+                ember: Color(red: 0.86, green: 0.46, blue: 0.38),
+                moss: Color(red: 0.46, green: 0.70, blue: 0.62),
+                prefersDark: true
+            )
+        case .ivory:
+            ColorPalette(
+                ink: Color(red: 0.94, green: 0.91, blue: 0.84),
+                panel: Color(red: 0.90, green: 0.86, blue: 0.78),
+                card: Color(red: 0.98, green: 0.96, blue: 0.91),
+                line: Color(red: 0.72, green: 0.64, blue: 0.50),
+                cream: Color(red: 0.18, green: 0.14, blue: 0.10),
+                muted: Color(red: 0.42, green: 0.36, blue: 0.28),
+                gold: Color(red: 0.58, green: 0.42, blue: 0.18),
+                ember: Color(red: 0.72, green: 0.28, blue: 0.18),
+                moss: Color(red: 0.32, green: 0.48, blue: 0.30),
+                prefersDark: false
+            )
+        }
+    }
+}
+
+/// Reads the active palette from `AppStore` so SwiftUI views re-render on change.
+@MainActor
 enum Theme {
-    static let ink = Color(red: 0.09, green: 0.07, blue: 0.06)
-    static let panel = Color(red: 0.14, green: 0.11, blue: 0.09)
-    static let card = Color(red: 0.20, green: 0.15, blue: 0.12)
-    static let line = Color(red: 0.39, green: 0.30, blue: 0.22)
-    static let cream = Color(red: 0.96, green: 0.91, blue: 0.82)
-    static let muted = Color(red: 0.72, green: 0.63, blue: 0.51)
-    static let gold = Color(red: 0.82, green: 0.64, blue: 0.35)
-    static let ember = Color(red: 0.76, green: 0.36, blue: 0.26)
-    static let moss = Color(red: 0.49, green: 0.66, blue: 0.45)
+    static var active: ColorPalette { AppStore.shared.colorTheme.palette }
+
+    static var ink: Color { active.ink }
+    static var panel: Color { active.panel }
+    static var card: Color { active.card }
+    static var line: Color { active.line }
+    static var cream: Color { active.cream }
+    static var muted: Color { active.muted }
+    static var gold: Color { active.gold }
+    static var ember: Color { active.ember }
+    static var moss: Color { active.moss }
 
     static func serif(_ size: CGFloat, weight: Font.Weight = .semibold) -> Font {
         .system(size: size, weight: weight, design: .serif)
@@ -151,10 +288,11 @@ struct CheckButton: NSViewRepresentable {
     }
 
     private func apply(_ button: NSButton, context: Context) {
+        _ = AppStore.shared.colorTheme
         button.attributedTitle = NSAttributedString(
             string: title,
             attributes: [
-                .foregroundColor: NSColor(srgbRed: 0.96, green: 0.91, blue: 0.82, alpha: 1),
+                .foregroundColor: Theme.active.creamNSColor,
                 .font: NSFont.systemFont(ofSize: 11, weight: .semibold),
             ]
         )
